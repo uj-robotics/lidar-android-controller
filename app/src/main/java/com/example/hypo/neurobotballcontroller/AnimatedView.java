@@ -77,6 +77,7 @@ public class AnimatedView extends ImageView {
                         packet.put("right_motor", right_motor);
                         Client client = new Client(packet);
                         client.run();
+                        new Thread(client).start();
                     } catch (JSONException e) {
                     }
 
@@ -98,7 +99,7 @@ public class AnimatedView extends ImageView {
                         packet.put("left_motor", left_motor);
                         packet.put("right_motor", right_motor);
                         Client client = new Client(packet);
-                        client.run();
+                        new Thread(client).start();
                     } catch (JSONException e) {
                     }
                     return true;
@@ -110,7 +111,7 @@ public class AnimatedView extends ImageView {
                         packet.put("left_motor", left_motor);
                         packet.put("right_motor", right_motor);
                         Client client = new Client(packet);
-                        client.run();
+                        new Thread(client).start();
                     } catch (JSONException e) {
                     }
 

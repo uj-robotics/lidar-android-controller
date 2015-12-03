@@ -19,7 +19,7 @@ import java.net.Socket;
 //klient tcp/ip, wysyła dane
 public class Client implements Runnable {
     JSONObject packet;
-    public static final String SERVER_IP = "192.168.0.127"; //your computer IP address
+    public static final String SERVER_IP = "192.168.0.57"; //your computer IP address
     public static final int SERVER_PORT = 5678;
     // message to send to the server
     private String mServerMessage;
@@ -31,6 +31,7 @@ public class Client implements Runnable {
     private PrintWriter mBufferOut;
     // used to read messages from the server
     private BufferedReader mBufferIn;
+    Thread backgroundThread;
 
     public void sendMessage(String message) {
         if (mBufferOut != null && !mBufferOut.checkError()) {
@@ -69,6 +70,7 @@ public class Client implements Runnable {
         mRun = true;
 
         try {
+
             //here you must put your computer's IP address.
             InetAddress serverAddr = InetAddress.getByName(SERVER_IP);
 
@@ -76,14 +78,13 @@ public class Client implements Runnable {
 
             //create a socket to make the connection with the server
             Socket socket = new Socket(serverAddr, SERVER_PORT); //to jest chyb
-
             try {
                 Log.i("Debug", "inside try catch");
                 //sends the message to the server
                 mBufferOut = new PrintWriter(new BufferedWriter(new OutputStreamWriter(socket.getOutputStream())), true);
+                Log.e("TCP", "GOING TO SEND: " + packet.toString());
                 sendMessage(packet.toString());//wysyla pakiet z danymi
-
-                Log.e("RESPONSE FROM SERVER", "S: Received Message: '" + mServerMessage + "'");
+                Thread.sleep(500);
 
             } catch (Exception e) {
 
