@@ -76,7 +76,7 @@ public class AnimatedView extends ImageView {
                         packet.put("left_motor", left_motor);
                         packet.put("right_motor", right_motor);
                         Client client = new Client(packet);
-                        client.run();
+                        client.run();// excutor.execute(client);
                         new Thread(client).start();
                     } catch (JSONException e) {
                     }
@@ -121,9 +121,9 @@ public class AnimatedView extends ImageView {
             }
         });
 
-        BitmapDrawable ball = (BitmapDrawable) mContext.getResources().getDrawable(R.drawable.ball);
+        BitmapDrawable ball = (BitmapDrawable) mContext.getResources().getDrawable(R.drawable.ball_64x64);
 
-        c.drawBitmap(ball.getBitmap(), x-100, y-100, null);
+        c.drawBitmap(ball.getBitmap(), x - 50, y - 50, null);
 
         h.postDelayed(r, FRAME_RATE);
 
