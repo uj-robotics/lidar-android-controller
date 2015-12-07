@@ -132,13 +132,37 @@ public class AnimatedView extends ImageView {
                     y = (int)event.getY();
                     //packet.put <- wedlug protokolu rafala kozika
                     //run Client Thread
-                    left_motor = 127;
-                    right_motor = 127;
+                    double Angle = angle(referenceX, referenceY, event.getX() - originX, event.getY() - originY);
 
+                    if (Angle <= angle(originX, originY, event.getX() - originX, event.getY() - originY)) {
+                        //naprzod
+                        left_motor = 127;
+                        right_motor = 127;
+
+                    } else if (Angle > angle(originX, originY, -160, 400)) {
+                        //do tylu
+                        left_motor = -127;
+                        right_motor = -127;
+                    } else if (Angle < angle(-240, 240, originX, originY) && Angle > angle(-240, -240, originX, originY)) {
+                        //lewo-prawo
+                        if (x <= 240) {
+                            //right
+                            left_motor = 127;
+                            right_motor = -127;
+
+                        } else {
+                            //left
+                            left_motor = -127;
+                            right_motor = 127;
+                        }
+                    } else {
+                        //jazda z zakretem
+                    }
                     try {
                         packet.put("left_motor", left_motor);
                         packet.put("right_motor", right_motor);
                         Client client = new Client(packet);
+                        client.run();// excutor.execute(client);
                         new Thread(client).start();
                     } catch (JSONException e) {
                     }
