@@ -19,7 +19,7 @@ import java.net.Socket;
 //klient tcp/ip, wysyła dane
 public class Client implements Runnable {
     JSONObject packet;
-    public static final String SERVER_IP = "192.168.0.57"; //your computer IP address
+    public static final String SERVER_IP = "192.168.0.109"; //your computer IP address
     public static final int SERVER_PORT = 5678;
     // message to send to the server
     private String mServerMessage;
@@ -83,7 +83,9 @@ public class Client implements Runnable {
                 //sends the message to the server
                 mBufferOut = new PrintWriter(new BufferedWriter(new OutputStreamWriter(socket.getOutputStream())), true);
                 Log.e("TCP", "GOING TO SEND: " + packet.toString());
-                sendMessage(packet.toString());//wysyla pakiet z danymi
+                sendMessage("!" + packet.toString().length() + "!" + packet.toString());//wysyla pakiet z danymi
+//                sendMessage(packet.toString());//wysyla pakiet z danymi
+//                sendMessage(packet.toString());//wysyla pakiet z danymi
                 Thread.sleep(500);
 
             } catch (Exception e) {
