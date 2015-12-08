@@ -24,9 +24,9 @@ public class AnimatedView extends ImageView {
     private Context mContext;
 
     int x = -1;
-
     int y = -1;
-
+    int originX = 240, originY = 400;
+    int referenceX = 0, referenceY = -400;
     private Handler h;
 
     private final int FRAME_RATE = 30;
@@ -53,6 +53,20 @@ public class AnimatedView extends ImageView {
 
     };
 
+    double norm(double x, double y) {
+        if (x == 0 && y == 0) return 0;
+        return Math.sqrt(x * x + y * y);
+    }
+
+    double dot(double x1, double y1, double x2, double y2) {
+        return x1 * x2 + y1 * y2;
+
+    }
+
+    double angle(double x1, double y1, double x2, double y2) {
+        return Math.acos(dot(x1, y1, x2, y2) / (norm(x1, y1) * norm(x2, y2)));
+    }
+
     protected void onDraw(Canvas c) {
         this.setOnTouchListener(new OnTouchListener() {
             @Override
@@ -70,13 +84,39 @@ public class AnimatedView extends ImageView {
                     Log.d("  main ", " value of x,y  down" + event.getX() + " " + event.getY());
                     x = (int)event.getX();
                     y = (int)event.getY();
-                    left_motor = 127;
-                    right_motor = 127;
+                    left_motor = 0;
+                    right_motor = 0;
+                    double Angle = angle(referenceX, referenceY, event.getX() - originX, event.getY() - originY);
+
+                    if (Angle <= angle(originX, originY, event.getX() - originX, event.getY() - originY)) {
+                        //naprzod
+                        left_motor = 127;
+                        right_motor = 127;
+
+                    } else if (Angle > angle(originX, originY, -160, 400)) {
+                        //do tylu
+                        left_motor = -127;
+                        right_motor = -127;
+                    } else if (Angle < angle(-240, 240, originX, originY) && Angle > angle(-240, -240, originX, originY)) {
+                        //lewo-prawo
+                        if (x <= 240) {
+                            //right
+                            left_motor = 127;
+                            right_motor = -127;
+
+                        } else {
+                            //left
+                            left_motor = -127;
+                            right_motor = 127;
+                        }
+                    } else {
+                        //jazda z zakretem
+                    }
                     try {
                         packet.put("left_motor", left_motor);
                         packet.put("right_motor", right_motor);
                         Client client = new Client(packet);
-                        client.run();
+                        client.run();// excutor.execute(client);
                         new Thread(client).start();
                     } catch (JSONException e) {
                     }
@@ -92,13 +132,37 @@ public class AnimatedView extends ImageView {
                     y = (int)event.getY();
                     //packet.put <- wedlug protokolu rafala kozika
                     //run Client Thread
-                    left_motor = 127;
-                    right_motor = 127;
+                    double Angle = angle(referenceX, referenceY, event.getX() - originX, event.getY() - originY);
 
+                    if (Angle <= angle(originX, originY, event.getX() - originX, event.getY() - originY)) {
+                        //naprzod
+                        left_motor = 127;
+                        right_motor = 127;
+
+                    } else if (Angle > angle(originX, originY, -160, 400)) {
+                        //do tylu
+                        left_motor = -127;
+                        right_motor = -127;
+                    } else if (Angle < angle(-240, 240, originX, originY) && Angle > angle(-240, -240, originX, originY)) {
+                        //lewo-prawo
+                        if (x <= 240) {
+                            //right
+                            left_motor = 127;
+                            right_motor = -127;
+
+                        } else {
+                            //left
+                            left_motor = -127;
+                            right_motor = 127;
+                        }
+                    } else {
+                        //jazda z zakretem
+                    }
                     try {
                         packet.put("left_motor", left_motor);
                         packet.put("right_motor", right_motor);
                         Client client = new Client(packet);
+                        client.run();// excutor.execute(client);
                         new Thread(client).start();
                     } catch (JSONException e) {
                     }
@@ -121,9 +185,9 @@ public class AnimatedView extends ImageView {
             }
         });
 
-        BitmapDrawable ball = (BitmapDrawable) mContext.getResources().getDrawable(R.drawable.ball);
+        BitmapDrawable ball = (BitmapDrawable) mContext.getResources().getDrawable(R.drawable.ball_64x64);
 
-        c.drawBitmap(ball.getBitmap(), x-100, y-100, null);
+        c.drawBitmap(ball.getBitmap(), x - 50, y - 50, null);
 
         h.postDelayed(r, FRAME_RATE);
 
