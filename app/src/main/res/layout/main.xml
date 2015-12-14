@@ -10,6 +10,11 @@
 
     android:background="@drawable/plane2">
 
+    <!--<EditText-->
+    <!--android:layout_width="match_parent"-->
+    <!--android:layout_height="wrap_content"-->
+    <!--android:id="@+id/editText" />-->
+
     <com.example.hypo.neurobotballcontroller.AnimatedView
 
         android:id="@+id/anim_view"

@@ -25,8 +25,10 @@ public class AnimatedView extends ImageView {
 
     int x = -1;
     int y = -1;
-    int originX = 240, originY = 400;
+
     int referenceX = 0, referenceY = -400;
+    int phoneX = 480, phoneY = 800;
+    int originX = phoneX / 2, originY = phoneY / 2;
     private Handler h;
 
     private final int FRAME_RATE = 30;
@@ -64,8 +66,9 @@ public class AnimatedView extends ImageView {
     }
 
     double angle(double x1, double y1, double x2, double y2) {
-        return Math.acos(dot(x1, y1, x2, y2) / (norm(x1, y1) * norm(x2, y2)));
+        return Math.acos(dot(x1, y1, x2, y2) / ((norm(x1, y1) * norm(x2, y2))));
     }
+
 
     protected void onDraw(Canvas c) {
         this.setOnTouchListener(new OnTouchListener() {
@@ -74,49 +77,57 @@ public class AnimatedView extends ImageView {
                 /*
                     JSON:
                     {'left_motor': int; 'right_motor': int;}
-                    left_motor - predkość lewego silnika, od 255 do -255; 0 stop
-                    right_motor - predkość prawego silnika, od 255 do -255; 0 stop
+                    left_motor - predkosc lewego silnika, od 255 do -255; 0 stop
+                    right_motor - predkosc prawego silnika, od 255 do -255; 0 stop
                 */
                 JSONObject packet = new JSONObject();
                 int left_motor = 0, right_motor = 0;
 
                 if (event.getAction() == MotionEvent.ACTION_DOWN) {
-                    Log.d("  main ", " value of x,y  down" + event.getX() + " " + event.getY());
+                    Log.d("TURN", " value of x,y  down" + event.getX() + " " + event.getY());
                     x = (int)event.getX();
                     y = (int)event.getY();
                     left_motor = 0;
                     right_motor = 0;
                     double Angle = angle(referenceX, referenceY, event.getX() - originX, event.getY() - originY);
+                    Log.d("TURN", "" + Angle * 180 / Math.PI);
 
-                    if (Angle <= angle(originX, originY, event.getX() - originX, event.getY() - originY)) {
+                    if (Angle <= angle(referenceX, referenceY, referenceX + 160, referenceY)) {
                         //naprzod
-                        left_motor = 127;
-                        right_motor = 127;
+                        Log.d("TURN", "FORWARD");
+                        left_motor = 200;
+                        right_motor = 200;
 
-                    } else if (Angle > angle(originX, originY, -160, 400)) {
+                    } else if (Angle > angle(referenceX, referenceY, -160, 400)) {
                         //do tylu
-                        left_motor = -127;
-                        right_motor = -127;
-                    } else if (Angle < angle(-240, 240, originX, originY) && Angle > angle(-240, -240, originX, originY)) {
+                        Log.d("TURN", "BACKWARDS");
+                        left_motor = -200;
+                        right_motor = -200;
+                    } else if (Angle < angle(-240, 240, referenceX, referenceY) && Angle > angle(-240, -240, referenceX, referenceY)) {
                         //lewo-prawo
-                        if (x <= 240) {
+                        Log.d("TURN", "OBROT W");
+                        if (x >= originX) {
                             //right
-                            left_motor = 127;
-                            right_motor = -127;
+                            Log.d("TURN", "PRAWO");
+
+                            left_motor = 255;
+                            right_motor = -255;
 
                         } else {
                             //left
-                            left_motor = -127;
-                            right_motor = 127;
+                            Log.d("TURN", "LEWO");
+                            left_motor = -255;
+                            right_motor = 255;
                         }
                     } else {
                         //jazda z zakretem
+                        Log.d("TURN", "ZAKRET");
                     }
                     try {
                         packet.put("left_motor", left_motor);
                         packet.put("right_motor", right_motor);
                         Client client = new Client(packet);
-                        client.run();// excutor.execute(client);
+                        client.run();// excutor.execute(client)
                         new Thread(client).start();
                     } catch (JSONException e) {
                     }
@@ -134,38 +145,46 @@ public class AnimatedView extends ImageView {
                     //run Client Thread
                     double Angle = angle(referenceX, referenceY, event.getX() - originX, event.getY() - originY);
 
-                    if (Angle <= angle(originX, originY, event.getX() - originX, event.getY() - originY)) {
+                    if (Angle <= angle(referenceX, referenceY, referenceX + 160, referenceY)) {
                         //naprzod
-                        left_motor = 127;
-                        right_motor = 127;
+                        Log.d("TURN", "FORWARD");
+                        left_motor = 200;
+                        right_motor = 200;
 
-                    } else if (Angle > angle(originX, originY, -160, 400)) {
+                    } else if (Angle > angle(referenceX, referenceY, -160, 400)) {
                         //do tylu
-                        left_motor = -127;
-                        right_motor = -127;
-                    } else if (Angle < angle(-240, 240, originX, originY) && Angle > angle(-240, -240, originX, originY)) {
+                        Log.d("TURN", "BACKWARDS");
+                        left_motor = -200;
+                        right_motor = -200;
+                    } else if (Angle < angle(-240, 240, referenceX, referenceY) && Angle > angle(-240, -240, referenceX, referenceY)) {
                         //lewo-prawo
-                        if (x <= 240) {
+                        Log.d("TURN", "OBROT W");
+                        if (x >= originX) {
                             //right
-                            left_motor = 127;
-                            right_motor = -127;
+                            Log.d("TURN", "PRAWO");
+
+                            left_motor = 255;
+                            right_motor = -255;
 
                         } else {
                             //left
-                            left_motor = -127;
-                            right_motor = 127;
+                            Log.d("TURN", "LEWO");
+                            left_motor = -255;
+                            right_motor = 255;
                         }
                     } else {
                         //jazda z zakretem
+                        Log.d("TURN", "ZAKRET");
                     }
                     try {
                         packet.put("left_motor", left_motor);
                         packet.put("right_motor", right_motor);
                         Client client = new Client(packet);
-                        client.run();// excutor.execute(client);
+                        client.run();// excutor.execute(client)
                         new Thread(client).start();
                     } catch (JSONException e) {
                     }
+
                     return true;
                 } else if (event.getAction() == MotionEvent.ACTION_UP) {
                     Log.d("  main ", "STOPPED");
