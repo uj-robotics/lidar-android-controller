@@ -122,6 +122,28 @@ public class AnimatedView extends ImageView {
                     } else {
                         //jazda z zakretem
                         Log.d("TURN", "ZAKRET");
+                        if (y <= phoneY / 2) {
+                            //F
+                            if (x >= phoneX / 2) {
+                                //R
+                                left_motor = 255;
+                                right_motor = 127;
+                            } else {
+                                left_motor = 127;
+                                right_motor = 255;
+                            }
+                        } else {
+                            //B
+                            if (x >= phoneX / 2) {
+                                left_motor = -255;
+                                right_motor = -127;
+
+
+                            } else {
+                                left_motor = -127;
+                                right_motor = -255;
+                            }
+                        }
                     }
                     try {
                         packet.put("left_motor", left_motor);
@@ -148,14 +170,14 @@ public class AnimatedView extends ImageView {
                     if (Angle <= angle(referenceX, referenceY, referenceX + 160, referenceY)) {
                         //naprzod
                         Log.d("TURN", "FORWARD");
-                        left_motor = 200;
-                        right_motor = 200;
+                        left_motor = 255;
+                        right_motor = 255;
 
                     } else if (Angle > angle(referenceX, referenceY, -160, 400)) {
                         //do tylu
                         Log.d("TURN", "BACKWARDS");
-                        left_motor = -200;
-                        right_motor = -200;
+                        left_motor = -255;
+                        right_motor = -255;
                     } else if (Angle < angle(-240, 240, referenceX, referenceY) && Angle > angle(-240, -240, referenceX, referenceY)) {
                         //lewo-prawo
                         Log.d("TURN", "OBROT W");
@@ -175,6 +197,28 @@ public class AnimatedView extends ImageView {
                     } else {
                         //jazda z zakretem
                         Log.d("TURN", "ZAKRET");
+                        if (y <= phoneY / 2) {
+                            //F
+                            if (x >= phoneX / 2) {
+                                //R
+                                left_motor = 255;
+                                right_motor = 127;
+                            } else {
+                                left_motor = 127;
+                                right_motor = 255;
+                            }
+                        } else {
+                            //B
+                            if (x >= phoneX / 2) {
+                                left_motor = -255;
+                                right_motor = -127;
+
+
+                            } else {
+                                left_motor = -127;
+                                right_motor = -255;
+                            }
+                        }
                     }
                     try {
                         packet.put("left_motor", left_motor);
