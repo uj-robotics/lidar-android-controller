@@ -16,15 +16,11 @@ import java.net.Socket;
  * Created by hypo on 25.11.15.
  */
 
-//klient tcp/ip, wysyła dane
 public class Client implements Runnable {
     JSONObject packet;
     public static final String SERVER_IP = "192.168.0.109"; //your computer IP address
     public static final int SERVER_PORT = 5678;
-    // message to send to the server
-    private String mServerMessage;
-    // sends message received notifications
-    //private OnMessageReceived mMessageListener = null;
+    private String mServerMessage;  // message to send to the server
     // while this is true, the server will continue running
     private boolean mRun = false;
     // used to send messages
@@ -42,18 +38,12 @@ public class Client implements Runnable {
 
     public void stopClient() {
         Log.i("Debug", "stopClient");
-
-        // send mesage that we are closing the connection
-        //sendMessage(Constants.CLOSED_CONNECTION + "Kazy");
-
         mRun = false;
 
         if (mBufferOut != null) {
             mBufferOut.flush();
             mBufferOut.close();
         }
-
-        //mMessageListener = null;
         mBufferIn = null;
         mBufferOut = null;
         mServerMessage = null;
@@ -83,9 +73,7 @@ public class Client implements Runnable {
                 //sends the message to the server
                 mBufferOut = new PrintWriter(new BufferedWriter(new OutputStreamWriter(socket.getOutputStream())), true);
                 Log.e("TCP", "GOING TO SEND: " + packet.toString());
-                sendMessage("!" + packet.toString().length() + "!" + packet.toString());//wysyla pakiet z danymi
-//                sendMessage(packet.toString());//wysyla pakiet z danymi
-//                sendMessage(packet.toString());//wysyla pakiet z danymi
+                sendMessage("!" + packet.toString().length() + "!" + packet.toString());
                 Thread.sleep(500);
 
             } catch (Exception e) {
@@ -93,8 +81,6 @@ public class Client implements Runnable {
                 Log.e("TCP", "S: Error", e);
 
             } finally {
-                //the socket must be closed. It is not possible to reconnect to this socket
-                // after it is closed, which means a new socket instance has to be created.
                 socket.close();
             }
 
