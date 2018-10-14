@@ -18,14 +18,12 @@ import java.net.Socket;
 
 public class Client implements Runnable {
     JSONObject packet;
-    public static final String SERVER_IP = "192.168.0.109"; //your computer IP address
+    public static final String SERVER_IP = "192.168.0.109";
     public static final int SERVER_PORT = 5678;
-    private String mServerMessage;  // message to send to the server
+    private String mServerMessage;
     // while this is true, the server will continue running
     private boolean mRun = false;
-    // used to send messages
     private PrintWriter mBufferOut;
-    // used to read messages from the server
     private BufferedReader mBufferIn;
     Thread backgroundThread;
 
@@ -55,22 +53,17 @@ public class Client implements Runnable {
 
     @Override
     public void run() {
-        //bind port
-        //send (packet.toString())
         mRun = true;
-
+        
         try {
-
-            //here you must put your computer's IP address.
             InetAddress serverAddr = InetAddress.getByName(SERVER_IP);
 
             Log.e("TCP Client", "C: Connecting...");
 
             //create a socket to make the connection with the server
-            Socket socket = new Socket(serverAddr, SERVER_PORT); //to jest chyb
+            Socket socket = new Socket(serverAddr, SERVER_PORT);
             try {
                 Log.i("Debug", "inside try catch");
-                //sends the message to the server
                 mBufferOut = new PrintWriter(new BufferedWriter(new OutputStreamWriter(socket.getOutputStream())), true);
                 Log.e("TCP", "GOING TO SEND: " + packet.toString());
                 sendMessage("!" + packet.toString().length() + "!" + packet.toString());
